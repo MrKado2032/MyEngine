@@ -16,7 +16,7 @@ Application::Application()
 		throw std::runtime_error("failed to create window");
 	}
 
-	if (!GraphicsKernel::initialize(*m_window))
+	if (!GraphicsKernel::initialize())
 	{
 		throw std::runtime_error("failed to initialize graphics kernel");
 	}

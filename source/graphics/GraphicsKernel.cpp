@@ -2,6 +2,7 @@
 #include "GraphicsKernel.h"
 
 #include "DescriptorHeap.h"
+#include "CommandListManager.h"
 
 namespace GraphicsKernel
 {
@@ -13,6 +14,8 @@ namespace GraphicsKernel
 	static DescriptorHeap s_rtv_heap{};
 	static DescriptorAllocator s_rtv_allocator{};
 
+	static CommandListManager s_command_list_manager{};
+
 	// ---------------------- //
 
 	// --- Private functions --- //
@@ -23,7 +26,7 @@ namespace GraphicsKernel
 
 	// ------------------------ //
 
-	bool initialize(const Window& window)
+	bool initialize()
 	{
 		UINT dxgi_flags = 0;
 #ifdef _DEBUG
@@ -68,11 +71,24 @@ namespace GraphicsKernel
 			return false;
 		}
 
+		// コマンドマネージャーの作成
+		if (!s_command_list_manager.initialize(s_dx12_device.Get()))
+		{
+			spdlog::error("failed to initialize command list manager");
+			return false;
+		}
+
 		return true;
 	}
 
 	void destroy()
 	{
+		s_command_list_manager.destroy();
+
+		s_rtv_allocator.destroy();
+
+		s_rtv_heap.destroy();
+
 		s_dx12_device.Reset();
 		s_dxgi_factory.Reset();
 	}
@@ -140,5 +156,10 @@ namespace GraphicsKernel
 	DescriptorAllocator& get_rtv_allocator()
 	{
 		return s_rtv_allocator;
+	}
+
+	CommandListManager& get_cmd_manager()
+	{
+		return s_command_list_manager;
 	}
 }

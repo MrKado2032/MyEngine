@@ -145,10 +145,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="source\graphics\CommandContext.cpp" />
     <ClCompile Include="source\graphics\CommandListManager.cpp" />
     <ClCompile Include="source\graphics\DescriptorHeap.cpp" />
     <ClCompile Include="source\graphics\GraphicsKernel.cpp" />
-    <ClCompile Include="source\graphics\RenderTargetView.cpp" />
+    <ClCompile Include="source\graphics\SwapChain.cpp" />
     <ClCompile Include="source\Main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -163,10 +164,11 @@
     <ClInclude Include="source\Application.h" />
     <ClInclude Include="source\Engine.h" />
     <ClInclude Include="source\EntryPoint.h" />
+    <ClInclude Include="source\graphics\CommandContext.h" />
     <ClInclude Include="source\graphics\CommandListManager.h" />
     <ClInclude Include="source\graphics\DescriptorHeap.h" />
     <ClInclude Include="source\graphics\GraphicsKernel.h" />
-    <ClInclude Include="source\graphics\RenderTargetView.h" />
+    <ClInclude Include="source\graphics\SwapChain.h" />
     <ClInclude Include="source\pch.h" />
     <ClInclude Include="source\platform\Window.h" />
   </ItemGroup>

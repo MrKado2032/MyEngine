@@ -1,5 +1,8 @@
 #pragma once
 
+#include "GraphicsKernel.h"
+#include "CommandContext.h"
+
 struct CommandQueueCreateInfo
 {
 	D3D12_COMMAND_LIST_TYPE type = D3D12_COMMAND_LIST_TYPE_DIRECT;
@@ -25,8 +28,8 @@ public:
 	void wait_for_fence(uint64_t fence_value);
 	void wait_idle();
 
-	void execute_command(ID3D12CommandList* cmd_list);
-	uint64_t execute_and_signal(ID3D12CommandList* cmd_list);
+	void execute_command(ID3D12GraphicsCommandList6* cmd_list);
+	uint64_t execute_and_signal(ID3D12GraphicsCommandList6* cmd_list);
 
 	ID3D12CommandQueue* get_command_queue() const
 	{
@@ -57,11 +60,11 @@ public:
 	CommandListManager(const CommandListManager&) = delete;
 	CommandListManager& operator=(const CommandListManager&) = delete;
 
-	bool initialize(ID3D12Device* pDevice);
+	bool initialize(ID3D12Device6* pDevice);
 	void destroy();
 
-	bool create_command_list(ID3D12Device6* pDevice, ComPtr<ID3D12GraphicsCommandList6>& cmd_list, D3D12_COMMAND_LIST_TYPE type);
-	bool create_command_allocator(ID3D12Device6* pDevice, ComPtr<ID3D12CommandAllocator>& cmd_allocator, D3D12_COMMAND_LIST_TYPE type);
+	CommandContext& begin_context(D3D12_COMMAND_LIST_TYPE type, uint32_t frame_index);
+	uint64_t execute_context(CommandContext& context, CommandQueueType type);
 
 	void idle_gpu();
 
@@ -74,5 +77,5 @@ public:
 
 private:
 	std::array<CommandQueue, static_cast<size_t>(CommandQueueType::Count)> m_cmd_queues;
-
+	std::array<CommandContext, GraphicsKernel::kFrameCount> m_graphics_contexts;
 };

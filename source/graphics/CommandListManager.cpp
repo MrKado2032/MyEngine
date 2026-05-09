@@ -74,19 +74,19 @@ void CommandQueue::wait_idle()
 	wait_for_fence(fence_value);
 }
 
-void CommandQueue::execute_command(ID3D12CommandList* cmd_list)
+void CommandQueue::execute_command(ID3D12GraphicsCommandList6* cmd_list)
 {
 	ID3D12CommandList* cmd_lists[] = { cmd_list };
 	m_command_queue->ExecuteCommandLists(_countof(cmd_lists), cmd_lists);
 }
 
-uint64_t CommandQueue::execute_and_signal(ID3D12CommandList* cmd_list)
+uint64_t CommandQueue::execute_and_signal(ID3D12GraphicsCommandList6* cmd_list)
 {
 	execute_command(cmd_list);
 	return signal();
 }
 
-bool CommandListManager::initialize(ID3D12Device* pDevice)
+bool CommandListManager::initialize(ID3D12Device6* pDevice)
 {
 	if (!pDevice)
 	{
@@ -101,6 +101,15 @@ bool CommandListManager::initialize(ID3D12Device* pDevice)
 	{
 		spdlog::error("failed to create graphics queue");
 		return false;
+	}
+
+	for (auto& ctx : m_graphics_contexts)
+	{
+		if (!ctx.initialize(pDevice, D3D12_COMMAND_LIST_TYPE_DIRECT))
+		{
+			spdlog::error("failed to create command context");
+			return false;
+		}
 	}
 
 	return true;
@@ -119,38 +128,15 @@ void CommandListManager::destroy()
 	}
 }
 
-bool CommandListManager::create_command_list(ID3D12Device6* pDevice, ComPtr<ID3D12GraphicsCommandList6>& cmd_list, D3D12_COMMAND_LIST_TYPE type)
+CommandContext& CommandListManager::begin_context(D3D12_COMMAND_LIST_TYPE type, uint32_t frame_index)
 {
-	if (!pDevice)
-	{
-		spdlog::error("failed to create command list: device is nullptr");
-		return false;
-	}
-
-	if (FAILED(pDevice->CreateCommandList1(0, type, D3D12_COMMAND_LIST_FLAG_NONE, IID_PPV_ARGS(cmd_list.GetAddressOf()))))
-	{
-		spdlog::error("failed to create command list");
-		return false;
-	}
-
-	return true;
+	m_graphics_contexts[frame_index].begin();
+	return m_graphics_contexts[frame_index];
 }
 
-bool CommandListManager::create_command_allocator(ID3D12Device6* pDevice, ComPtr<ID3D12CommandAllocator>& cmd_allocator, D3D12_COMMAND_LIST_TYPE type)
+uint64_t CommandListManager::execute_context(CommandContext& context, CommandQueueType type)
 {
-	if (!pDevice)
-	{
-		spdlog::error("failed to create command allocator: device is nullptr");
-		return false;
-	}
-
-	if (FAILED(pDevice->CreateCommandAllocator(type, IID_PPV_ARGS(cmd_allocator.GetAddressOf()))))
-	{
-		spdlog::error("failed to create command allocator");
-		return false;
-	}
-
-	return true;
+	return get_queue(type).execute_and_signal(context.get_cmd_list());
 }
 
 void CommandListManager::idle_gpu()
