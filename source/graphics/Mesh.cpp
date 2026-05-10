@@ -44,7 +44,7 @@ Mesh MeshGenerator::generate(const std::vector<Vertex2D>& vertices, const std::v
 	mesh.vbView.SizeInBytes = static_cast<UINT>(vertex_size);
 
 	// インデックスバッファーの作成
-	auto const index_size = vertices.size() * sizeof(Vertex2D);
+	auto const index_size = indices.size() * sizeof(uint16_t);
 
 	auto index_heap_props = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	auto index_res_desc = CD3DX12_RESOURCE_DESC::Buffer(static_cast<UINT64>(index_size));
