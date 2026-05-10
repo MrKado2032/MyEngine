@@ -21,6 +21,23 @@ Application::Application()
 	{
 		throw std::runtime_error("failed to create renderer");
 	}
+
+	// テストで四角形ポリゴンを作る
+	std::vector<Vertex2D> vertices =
+	{
+		{ {-0.5f, 0.5f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f} },
+		{ { 0.5f, 0.5f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f} },
+		{ { 0.5f,-0.5f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f} },
+		{ {-0.5f,-0.5f, 0.0f}, {1.0f, 1.0f, 0.0f, 1.0f} },
+	};
+
+	std::vector<uint16_t> indices =
+	{
+		0, 1, 3, 1, 2, 3
+	};
+
+	auto mesh = MeshGenerator::generate(vertices, indices);
+	m_meshes.push_back(mesh);
 }
 
 Application::~Application()
@@ -31,6 +48,8 @@ Application::~Application()
 		m_renderer->destroy();
 		m_renderer.reset();
 	}
+
+	m_meshes.clear();
 
 	// ウインドウの破棄
 	if (m_window)
@@ -51,6 +70,12 @@ void Application::run()
 
 		// 初期フレーム処理
 		m_renderer->begin_frame();
+
+		// テストでここに四角形ポリゴン描画処理を書く
+		for (auto& mesh : m_meshes)
+		{
+			m_renderer->draw_mesh(mesh);
+		}
 		
 		// 毎フレーム処理
 		update(1);

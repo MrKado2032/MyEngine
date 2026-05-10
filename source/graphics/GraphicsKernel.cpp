@@ -4,6 +4,9 @@
 #include "DescriptorHeap.h"
 #include "CommandListManager.h"
 
+#include "RootSignature.h"
+#include "PipelineState.h"
+
 namespace GraphicsKernel
 {
 	// --- Static Objects --- //
@@ -15,6 +18,9 @@ namespace GraphicsKernel
 	static DescriptorAllocator s_rtv_allocator{};
 
 	static CommandListManager s_command_list_manager{};
+
+	static RootSignatureManager s_root_signature_manager{};
+	static PipelineStateManager s_pipeline_state_manager{};
 
 	// ---------------------- //
 
@@ -78,12 +84,29 @@ namespace GraphicsKernel
 			return false;
 		}
 
+		// ルートシグネチャの作成
+		if (!s_root_signature_manager.initialize(s_dx12_device.Get()))
+		{
+			spdlog::error("failed to initialize root signature");
+			return false;
+		}
+
+		// PSOの作成
+		if (!s_pipeline_state_manager.initialize(s_dx12_device.Get(), s_root_signature_manager))
+		{
+			spdlog::error("failed to initialize pso manager");
+			return false;
+		}
+
 		return true;
 	}
 
 	void destroy()
 	{
 		s_command_list_manager.destroy();
+
+		s_pipeline_state_manager.destroy();
+		s_root_signature_manager.destroy();
 
 		s_rtv_allocator.destroy();
 
@@ -161,5 +184,15 @@ namespace GraphicsKernel
 	CommandListManager& get_cmd_manager()
 	{
 		return s_command_list_manager;
+	}
+
+	RootSignatureManager& get_root_signature_manager()
+	{
+		return s_root_signature_manager;
+	}
+
+	PipelineStateManager& get_pso_manager()
+	{
+		return s_pipeline_state_manager;
 	}
 }

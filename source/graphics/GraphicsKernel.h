@@ -4,6 +4,8 @@ struct ID3D12Device6;
 struct IDXGIFactory7;
 class DescriptorAllocator;
 class CommandListManager;
+class RootSignatureManager;
+class PipelineStateManager;
 
 namespace GraphicsKernel
 {
@@ -17,4 +19,7 @@ namespace GraphicsKernel
 
 	DescriptorAllocator& get_rtv_allocator();
 	CommandListManager& get_cmd_manager();
+
+	RootSignatureManager& get_root_signature_manager();
+	PipelineStateManager& get_pso_manager();
 }
