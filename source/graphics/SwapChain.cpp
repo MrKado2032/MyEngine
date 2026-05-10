@@ -4,7 +4,7 @@
 #include "GraphicsKernel.h"
 #include "CommandListManager.h"
 
-bool SwapChain::initialize(const RenderTargetViewDetails& details)
+bool SwapChain::initialize(const SwapChainDetails& details)
 {
 	// スワップチェインの作成
 	if (!create_swap_chain(details))
@@ -64,7 +64,7 @@ SwapChain::FrameResource& SwapChain::get_current_frame_resource()
 	return m_frame_resources[get_current_back_buffer_index()];
 }
 
-bool SwapChain::create_swap_chain(const RenderTargetViewDetails& details)
+bool SwapChain::create_swap_chain(const SwapChainDetails& details)
 {
 	// スワップチェインの作成
 	DXGI_SWAP_CHAIN_DESC1 swap_chain_desc{};

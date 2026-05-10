@@ -1,7 +1,7 @@
 #pragma once
 #include "DescriptorHeap.h"
 
-struct RenderTargetViewDetails
+struct SwapChainDetails
 {
 	uint32_t init_width = UINT32_MAX;
 	uint32_t init_height = UINT32_MAX;
@@ -24,7 +24,7 @@ public:
 	SwapChain(const SwapChain&) = delete;
 	SwapChain& operator=(const SwapChain&) = delete;
 
-	bool initialize(const RenderTargetViewDetails& details);
+	bool initialize(const SwapChainDetails& details);
 	void destroy();
 
 	void present();
@@ -33,7 +33,7 @@ public:
 	FrameResource& get_current_frame_resource();
 
 private:
-	bool create_swap_chain(const RenderTargetViewDetails& details);
+	bool create_swap_chain(const SwapChainDetails& details);
 	bool create_render_target_view();
 
 	ComPtr<IDXGISwapChain4> m_swap_chain;

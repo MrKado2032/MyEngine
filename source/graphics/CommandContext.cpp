@@ -3,12 +3,14 @@
 
 bool CommandContext::initialize(ID3D12Device6* pDevice, D3D12_COMMAND_LIST_TYPE type)
 {
+	// コマンドリストの作成
 	if (FAILED(pDevice->CreateCommandList1(0, type, D3D12_COMMAND_LIST_FLAG_NONE, IID_PPV_ARGS(m_cmd_list.GetAddressOf()))))
 	{
 		spdlog::error("failed to create command list");
 		return false;
 	}
 
+	// コマンドアロケーターの作成
 	if (FAILED(pDevice->CreateCommandAllocator(type, IID_PPV_ARGS(m_cmd_allocator.GetAddressOf()))))
 	{
 		spdlog::error("failed to create command allocator");
@@ -20,12 +22,16 @@ bool CommandContext::initialize(ID3D12Device6* pDevice, D3D12_COMMAND_LIST_TYPE 
 
 void CommandContext::begin()
 {
+	// コマンドアロケーターの破棄処理
 	m_cmd_allocator->Reset();
+
+	// コマンドリストの破棄処理
 	m_cmd_list->Reset(m_cmd_allocator.Get(), nullptr);
 }
 
 void CommandContext::end()
 {
+	// コマンドリストをクローズして実行可能状態にする
 	if (m_cmd_list)
 	{
 		m_cmd_list->Close();
