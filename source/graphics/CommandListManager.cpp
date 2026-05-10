@@ -54,7 +54,6 @@ uint64_t CommandQueue::signal()
 {
 	auto const fence_value = m_next_fence_value++;
 	m_command_queue->Signal(m_fence.Get(), fence_value);
-	m_next_fence_value++;
 
 	return fence_value;
 }
