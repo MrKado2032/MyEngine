@@ -1,6 +1,7 @@
 #pragma once
 #include "GraphicsKernel.h"
 #include "SwapChain.h"
+#include "Mesh.h"
 
 class CommandContext;
 class Window;
@@ -21,6 +22,8 @@ public:
 
 	void begin_frame();
 	void end_frame();
+
+	void draw_mesh(Mesh& mesh);
 
 private:
 	std::array<uint64_t, GraphicsKernel::kFrameCount> m_fence_values;

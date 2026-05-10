@@ -4,6 +4,9 @@
 #include "../platform/Window.h"
 #include "CommandListManager.h"
 
+#include "RootSignature.h"
+#include "PipelineState.h"
+
 bool Renderer::initialize(const Window& window)
 {
 	if (!GraphicsKernel::initialize())
@@ -54,6 +57,12 @@ void Renderer::begin_frame()
 
 	m_current_context->transition_barrier(current_back_resource.buffer.Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
+	m_current_context->set_root_signature(GraphicsKernel::get_root_signature_manager().get_root_signature(RootSignatureType::Default2D));
+	m_current_context->set_pso(GraphicsKernel::get_pso_manager().get_pso(PipelineStateType::Default2D));
+
+	m_current_context->set_viewport(1280, 720);
+	m_current_context->set_scissor(1280, 720);
+
 	m_current_context->set_render_target(current_back_resource.handle.get_cpu_handle());
 
 	const FLOAT clear_color[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
@@ -73,4 +82,12 @@ void Renderer::end_frame()
 	current_frame_fence_value = GraphicsKernel::get_cmd_manager().execute_context(*m_current_context, CommandQueueType::Graphics);
 
 	m_swap_chain.present();
+}
+
+void Renderer::draw_mesh(Mesh& mesh)
+{
+	m_current_context->set_primitive_topolog(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	m_current_context->set_vertex_buffer_view(mesh.vbView);
+	m_current_context->set_index_buffer_view(mesh.ibView);
+	m_current_context->draw_indexed(mesh.indexCount, 1);
 }

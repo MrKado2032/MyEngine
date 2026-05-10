@@ -26,6 +26,8 @@ protected:
 private:
 	std::unique_ptr<Window> m_window;
 	std::unique_ptr<Renderer> m_renderer;
+
+	std::vector<Mesh> m_meshes;
 };
 
 Application* create_application();

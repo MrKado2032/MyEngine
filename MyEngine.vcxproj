@@ -149,7 +149,11 @@
     <ClCompile Include="source\graphics\CommandListManager.cpp" />
     <ClCompile Include="source\graphics\DescriptorHeap.cpp" />
     <ClCompile Include="source\graphics\GraphicsKernel.cpp" />
+    <ClCompile Include="source\graphics\Mesh.cpp" />
+    <ClCompile Include="source\graphics\PipelineState.cpp" />
     <ClCompile Include="source\graphics\Renderer.cpp" />
+    <ClCompile Include="source\graphics\RootSignature.cpp" />
+    <ClCompile Include="source\graphics\ShaderLoader.cpp" />
     <ClCompile Include="source\graphics\SwapChain.cpp" />
     <ClCompile Include="source\Main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -169,10 +173,40 @@
     <ClInclude Include="source\graphics\CommandListManager.h" />
     <ClInclude Include="source\graphics\DescriptorHeap.h" />
     <ClInclude Include="source\graphics\GraphicsKernel.h" />
+    <ClInclude Include="source\graphics\Mesh.h" />
+    <ClInclude Include="source\graphics\PipelineState.h" />
     <ClInclude Include="source\graphics\Renderer.h" />
+    <ClInclude Include="source\graphics\RootSignature.h" />
+    <ClInclude Include="source\graphics\ShaderLoader.h" />
     <ClInclude Include="source\graphics\SwapChain.h" />
+    <ClInclude Include="source\graphics\VertexInfo.h" />
     <ClInclude Include="source\pch.h" />
     <ClInclude Include="source\platform\Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="source\shaders\Basic2DHeader.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="source\shaders\Basic2D_PixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)/source/shaders/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)/source/shaders/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="source\shaders\Basic2D_VertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)/source/shaders/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)/source/shaders/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
